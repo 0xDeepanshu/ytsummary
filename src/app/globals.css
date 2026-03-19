@@ -1,56 +1,108 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ─── */
 :root {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --bg-base: #07070a;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --red-glow: rgba(220, 38, 38, 0.25);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* ─── Base ─── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  background: var(--bg-base);
+  color: #f4f4f5;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  /* Prevent iOS auto-zoom on inputs */
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+/* ─── Glass card utility ─── */
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
 }
 
 /* ─── Animations ─── */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fade-in {
-  animation: fade-in 0.6s ease-out both;
+  animation: fade-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Shimmer loading skeleton */
+/* Stagger children of results */
+.fade-in > * {
+  animation: fade-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.fade-in > *:nth-child(1) { animation-delay: 0ms; }
+.fade-in > *:nth-child(2) { animation-delay: 80ms; }
+.fade-in > *:nth-child(3) { animation-delay: 150ms; }
+.fade-in > *:nth-child(4) { animation-delay: 220ms; }
+
+/* ─── Shimmer skeleton ─── */
 @keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
 }
 
 .shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
-  background-size: 800px 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
+  background: linear-gradient(
+    105deg,
+    rgba(255,255,255,0.03) 0%,
+    rgba(255,255,255,0.07) 40%,
+    rgba(255,255,255,0.03) 80%
+  );
+  background-size: 1200px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
 }
 
-/* Smooth scrollbar */
+/* ─── Focus styles ─── */
+*:focus-visible {
+  outline: none;
+}
+
+/* ─── Reduce motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .fade-in > * {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .shimmer {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: rgba(255,255,255,0.08);
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: rgba(255,255,255,0.14);
 }
